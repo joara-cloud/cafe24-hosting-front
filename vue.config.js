@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = { 
-	outputDir: path.resolve(__dirname, "../express-app/public"),
+	outputDir: path.resolve(__dirname, "../backend/public"),
 	devServer: { // 개발 서버 설정
 		overlay: false,
 		proxy: { // proxyTable 설정 

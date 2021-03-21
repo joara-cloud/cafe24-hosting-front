@@ -100,14 +100,16 @@ export default {
 
 			try {
 				// 전체 데이터 개수
-				const response = await FETCH_POSTS('post', '/posts/list'); 
-				this.totalList = response.data.posts.length;
+				// const response = await FETCH_POSTS('post', '/posts/list'); 
+				// this.totalList = response.data.posts.length;
 
 				// 뿌려질 데이터
 				const fetchData = {
 					page: this.$route.query.page,
 					listNum: this.$route.query.listNum,
 				}
+
+				console.log('addddd :::: ', fetchData);
 
 				// listNum 만큼 가져오기
 				const {data} = await FETCH_POSTS('post', '/posts/list', fetchData);
