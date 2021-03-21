@@ -1,0 +1,24 @@
+/* layout */
+body, p, a, textarea, input, button {font-family: 'Noto Sans KR', sans-serif;}
+#content {padding:150px 0 100px}
+.inner {max-width:1170px;width:100%;margin:0 auto}
+
+/* page */
+.page_title {margin:25px 0 115px;font-size:70px;text-align:center}
+
+/* button */
+.btn_ty01 {display:block;width:120px;margin:0 auto;padding:14px 0;border-radius:30px;font-size:14px;text-align:center;color:#fff;background-color:#172852;}
+.btn_ty01.c1 {background-color:#e2cebc;}
+.btn_ty01.c2 {background-color:#d06d43;}
+
+/* form */
+.form_ty01 {width:100%;max-width:900px;margin:0 auto}
+.form_ty01 label {display:inline-block;width:100px;margin:0 0 12px;font-size:14px;font-weight:bold;vertical-align:top;}
+.form_ty01 input {width:100%;padding:5px 10px;border:1px solid #ddd;border-radius:5px;font-size:14px;line-height:25px}
+.form_ty01 textarea {width:100%;min-height:200px;max-height:300px;padding:5px 10px;border:1px solid #ddd;border-radius:5px;font-size:14px;resize:vertical}
+.form_ty01 .row {margin:20px 0 0}
+.form_ty01 .row:first-child {margin:0}
+.form_ty01 button[type="submit"] {margin-top:40px}
+
+/* text */
+.text-right {text-align:right}
