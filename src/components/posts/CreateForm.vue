@@ -42,16 +42,6 @@ export default {
 
 				console.log(formData);
 				
-				// var response = await this.$http({
-				// 	method: 'post',
-				// 	url: '/posts/create',
-				// 	data: {
-				// 		subject: this.subject,
-				// 		content: this.content
-				// 	},
-				// 	fd
-				// });
-
 				for (let key of formData.entries()){ 
 					console.log(key[0] + ' '+key[1]) 
 					}
@@ -62,7 +52,9 @@ export default {
 					}
 				});
 				bus.$emit('show:toast', response.data.msg)
-				this.$router.push('/board/list');
+				// this.$router.push('/posts/list');
+				this.$router.push('/posts/list?listNum=8&page=1');
+				// window.location.href='/posts/list?listNum=8&page=1';
 			} catch(errer) {
 				console.log('submitform method error : ' + errer);
 			}

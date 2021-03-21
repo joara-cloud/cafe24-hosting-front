@@ -20,10 +20,14 @@ export default {
 		Dim
 	},
 	created() {		
+		var vm = this;
 
 		this.$http({
-			method: 'get',
-			url: '/api/movies'
+			method: 'post',
+			url: '/api/movies',
+			data: {
+				paramss: vm.$route.params
+			}
 		}).then(function(response) {
 			console.log('rrrrrrresponse : ', response);
 		}).catch(function(err) {

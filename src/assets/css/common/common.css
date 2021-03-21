@@ -7,9 +7,12 @@ body, p, a, textarea, input, button {font-family: 'Noto Sans KR', sans-serif;}
 .page_title {margin:25px 0 115px;font-size:70px;text-align:center}
 
 /* button */
-.btn_ty01 {display:block;width:120px;margin:0 auto;padding:14px 0;border-radius:30px;font-size:14px;text-align:center;color:#fff;background-color:#172852;}
+.btn_ty01 {display:inline-block;width:100px;padding:12px 0;border-radius:30px;border: 1px solid #172852;font-size:14px;line-height:1;text-align:center;color:#fff;background-color:#172852;}
+.btn_ty01.white {color:#172852;background:#fff}
 .btn_ty01.c1 {background-color:#e2cebc;}
 .btn_ty01.c2 {background-color:#d06d43;}
+.btns > * {margin-left:8px;vertical-align:middle;}
+
 
 /* form */
 .form_ty01 {width:100%;max-width:900px;margin:0 auto}

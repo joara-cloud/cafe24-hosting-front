@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {FETCH_POST} from '@/api/index.js';
+import {FETCH_POST} from '@/api/posts.js';
 import {dateFormat} from '@/utils/dateFormat.js';
 import Dim from '@/components/common/Dim.vue';
 

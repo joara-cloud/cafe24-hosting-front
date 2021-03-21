@@ -25,7 +25,7 @@ export default {
 	},
 	data() {
 		return {
-			showModal: false,
+			// showModal: false,
 			subject: '',
 			content: ''
 		}
@@ -41,6 +41,7 @@ export default {
 			CREATE_MEMO('post', '/memo/create', data).then(function(response) {
 				console.log('성공!', response);
 				Bus.$emit('onFetch');
+				Bus.$emit('onStep', 2);
 			})
 			.catch(function(err) {
 				console.log('메모 추가 중 에러 : ', err);

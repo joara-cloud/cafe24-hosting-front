@@ -37,6 +37,10 @@ var routes = [
       {
         path: 'card/:id',
         component: () => import('@/components/memo/CardPopup.vue')
+      },
+      {
+        path: 'detail/:id',
+        component: () => import('@/components/memo/MemoDetail.vue')
       }
     ]
   },

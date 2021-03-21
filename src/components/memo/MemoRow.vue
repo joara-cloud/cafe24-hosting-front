@@ -14,17 +14,19 @@
 					<button type="button" class="memo_delete">&times;</button>
 				</li> -->
 				<li class="list_item" v-for="row in rowData" v-bind:key="row.idx">
-					<div :data-idx="row.idx" :data-pos="row.pos">
-						<input type="text" :value="row.subject" readonly>
-						{{row.idx}}
-						<button type="button" class="memo_delete" @click="deleteList(row.idx)">&times;</button>
-					</div>
+					<router-link :to="`/memo/detail/${fdf}`">
+						<div :data-idx="row.idx" :data-pos="row.pos">
+							<input type="text" :value="row.subject" readonly>
+							<button type="button" class="memo_delete" @click="deleteList(row.idx)">&times;</button>
+						</div>
+					</router-link>										
 				</li>
 				<li class="add_list">
 					<a href="" v-on:click.prevent="$emit('dhow')">+ Add list</a>
 				</li>
 			</ul>
 		</div>
+
 		<!-- <router-link to="/card/1" id="addCard" class="memo_section" v-on:click.prevent="$emit('dhow')">+ Add Card</router-link> -->
 		<a href="" id="addCard" class="memo_section">+ Add Card</a>
 		<Dim v-if="isLoading"></Dim>
@@ -113,6 +115,7 @@ export default {
 					}).then(async () => {
 						const {data} = await FETCH_MEMO('post', '/memo/fetch');
 						this.rowData = data.rows;
+						Bus.$emit('onStep', 1);
 					})
 				}
 
@@ -140,6 +143,8 @@ export default {
 			try {
 				DELETE_MEMO('delete', `/memo/delete/${id}`).then(() => {
 					this.fetchList();
+					Bus.$emit('onStep', 3);
+
 				})
 
 			}catch(err) {

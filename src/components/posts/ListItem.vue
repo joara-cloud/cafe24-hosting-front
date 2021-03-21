@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="list_item">
 		<div class="sort">
 			<form method="get" ref="uploadForm">
 				<select name="" id="" v-model="sortSelect" @change="onPaging">
@@ -25,7 +25,10 @@
 					</router-link>
 				</li>
 			</ul>
-			<button type="submit">삭제</button>
+			<div class="btns text-right">
+				<router-link to="/posts/write" class="btn_ty01">글쓰기</router-link>
+				<button type="submit" class="btn_ty01 white">선택삭제</button>
+			</div>
 		</form>
 		<div class="pagination_wrap pagination">
 			<a :href="`?page=${prevPaging}&listNum=${listNum}`" class="crumb crumb__prev" @click="prevPage">Previous</a>
@@ -45,6 +48,7 @@
 <script>
 import {FETCH_POSTS, DELETE_POST} from '@/api/posts.js';
 import {dateFormat} from '@/utils/dateFormat.js';
+import bus from '@/utils/bus.js';
 import Dim from '@/components/common/Dim.vue';
 
 export default {
@@ -96,17 +100,17 @@ export default {
 		// 데이터 불러오기
 		async fetchData() {
 			this.currentPage = this.$route.query.page ? this.$route.query.page : 1;
-			this.listNum = this.$route.query.listNum;
+			this.listNum = this.$route.query.listNum ? this.$route.query.listNum : 8; // 기본 리스트 개수 : 8
 
 			try {
 				// 전체 데이터 개수
-				// const response = await FETCH_POSTS('post', '/posts/list'); 
-				// this.totalList = response.data.posts.length;
+				const response = await FETCH_POSTS('post', '/posts/list'); 
+				this.totalList = response.data.posts.length;
 
 				// 뿌려질 데이터
 				const fetchData = {
-					page: this.$route.query.page,
-					listNum: this.$route.query.listNum,
+					page: this.currentPage,
+					listNum: this.listNum,
 				}
 
 				console.log('addddd :::: ', fetchData);
@@ -143,7 +147,8 @@ export default {
 			console.log(data);
 
 			const response = await DELETE_POST('delete', '/posts/delete', data);
-			alert(response.data.msg);
+			// alert(response.data.msg);
+			bus.$emit('show:toast', response.data.msg)
 			this.fetchData();
 
 		}
@@ -152,9 +157,10 @@ export default {
 </script>
 
 <style>
-/* @import url('@/assets/css/post.css'); */
+ @import '../../assets/css/post.css';
+
 /* posts */
-.posts {margin-left:-2%;font-size:0}
+/* .posts {margin-left:-2%;font-size:0}
 .posts p {font-size:14px}
 .posts > li {display:inline-block;width:23%;margin-left:2%;margin-bottom:25px;vertical-align:top}
 .posts > li > a {display:block}
@@ -163,13 +169,14 @@ export default {
 .posts .thumb img {width:100%}
 .sort {padding:0 0 10px;text-align:right}
 .sort select {padding:7px 10px;border:1px solid #ccc;border-radius:5px;font-size:14px}
-.total {padding:0 0 15px;font-weight:600;color:#172852}
+.total {padding:0 0 15px;font-weight:600;color:#172852} */
 
 /* pagination */
+/* 
 .pagination {display: flex;justify-content:center;padding: 1rem;border-radius: 0.25rem;}
 .crumbs {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;list-style-type: none;margin: 0;padding: 0;gap: 0.5rem;}
-.crumb {display: block;padding: 0.5rem 1rem;text-decoration: none;color: currentColor;border-radius: 0.2rem;border: 0.0625rem solid #d7d7d7; /* 1px */}
+.crumb {display: block;padding: 0.5rem 1rem;text-decoration: none;color: currentColor;border-radius: 0.2rem;border: 0.0625rem solid #d7d7d7;}
 .crumb:hover, .active .crumb, .crumb__active {background-color: #1d1f20;color: #fdfdfd;border-color: #1d1f20;}
 .crumb__prev { margin-right: 0.5rem; }
-.crumb__next { margin-left: 0.5rem;}
+.crumb__next { margin-left: 0.5rem;} */
 </style>

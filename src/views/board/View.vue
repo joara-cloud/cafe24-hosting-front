@@ -2,7 +2,7 @@
 	<div>
 		<h3>{{this.postIndx}}</h3>
 		<view-content :postIndex="postIndex"></view-content>
-		<router-link to="/posts/list" class="btn_ty01">목록으로</router-link>
+		<router-link to="/posts/list?listNum=8&page=1" class="btn_ty01">목록으로</router-link>
 	</div>
 </template>
 
