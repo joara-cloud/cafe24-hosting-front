@@ -1,6 +1,6 @@
 <template>
 	<header id="header">
-		<!-- <div class="h_upper">
+		<!-- <div class="h_upper a">
 			<nav>
 				<a href="">Mac</a>
 				<a href="">iPad</a>
@@ -12,7 +12,7 @@
 			<!-- <h1><a href="/"><img alt="Vue logo" src="@/assets/logo.png"></a></h1> -->
 			<h1><router-link to="/">ra</router-link></h1>
 			<ul class="gnb">
-				<!-- <li><router-link to="/usage">Usage</router-link></li> -->
+				<li><router-link to="/usage">Usage</router-link></li>
 				<li><router-link to="/memo">Memo</router-link></li>
 				<li><router-link to="/posts/list?listNum=8&page=1">Board</router-link></li>
 				<!-- <li class="member"><router-link to="/login">Login</router-link></li> -->

@@ -4,20 +4,11 @@
 			<h3>Doing</h3>
 			{{memoPosts}}
 			<ul id="memoList" class="memo_list">
-				<!-- <li>
-					<input type="text" value="1메모내용입니다." readonly>
-					<div class="icon">
-						<svg height="10" viewBox="0 0 16 10" width="16" xmlns="http://www.w3.org/2000/svg"> 
-							<path d="m1 0h14c.5522847 0 1 .44771525 1 1s-.4477153 1-1 1h-14c-.55228475 0-1-.44771525-1-1s.44771525-1 1-1zm0 4h14c.5522847 0 1 .44771525 1 1s-.4477153 1-1 1h-14c-.55228475 0-1-.44771525-1-1s.44771525-1 1-1zm0 4h8c.55228475 0 1 .44771525 1 1s-.44771525 1-1 1h-8c-.55228475 0-1-.44771525-1-1s.44771525-1 1-1z" fill="#30364c" fill-rule="evenodd" opacity=".3"></path>
-						</svg>
-					</div>
-					<button type="button" class="memo_delete">&times;</button>
-				</li> -->
-				<li class="list_item" v-for="row in rowData" v-bind:key="row.idx">
-					<router-link :to="`/memo/detail/${fdf}`">
-						<div :data-idx="row.idx" :data-pos="row.pos">
-							<input type="text" :value="row.subject" readonly>
-							<button type="button" class="memo_delete" @click="deleteList(row.idx)">&times;</button>
+				<li class="list_item" v-for="memo in memos" v-bind:key="memo.idx" :data-idx="memo.idx" :data-pos="memo.pos">
+					<router-link :to="`/memo/detail/${memo.idx}`">
+						<div>
+							<input type="text" :value="memo.subject" readonly>
+							<button type="button" class="memo_delete" @click="deleteList(memo.idx)">&times;</button>
 						</div>
 					</router-link>										
 				</li>
@@ -39,6 +30,7 @@ import 'dragula/dist/dragula.css';
 import Dim from '@/components/common/Dim.vue'
 import Bus from '@/utils/bus.js'
 import {FETCH_MEMO, DELETE_MEMO} from '@/api/memo.js';
+import {mapState, mapActions} from 'vuex';
 
 export default {
 	data() {
@@ -52,12 +44,18 @@ export default {
 		Dim
 	},
 	created() {
-		this.fetchList();
+		this.FETCH_MEMO();
+		this.isLoading = false;
+
 		Bus.$on('onFetch', this.fetchList);
-		
+	},
+	computed: {
+		...mapState(['memo', 'memos'])
 	},
 	mounted() {
-		const vm = this;
+		// const vm = this;
+
+		console.log('mounted');
 
 		this.dragulaCard = dragula([
 			// ...Array.from(this.$el.querySelectorAll('#memoList')) // 유사배열이라 Array.from처리해줌 (배열로 넣기위해)
@@ -65,31 +63,32 @@ export default {
 		]).on('drop', (el) => { // el, wrapper, target, siblings
 
 			const targetList = {
-				idx: el.firstElementChild.dataset.idx*1,
-				pos: el.firstElementChild.dataset.pos*1
+				idx: el.dataset.idx*1,
+				pos: el.dataset.pos*1
 			};
+
+			console.log(targetList.idx);
+
 
 			// 순서 비교는 배열의 index값으로 할꺼임
 			Array.from(document.querySelectorAll('#memoList .list_item')).forEach((el, idx, arr) => { // 배열의 index로 target의 위치 확인
-				const cardId = el.firstElementChild.dataset.idx;
+
+				const cardId = el.dataset.idx;
 				let prevList = null;
 				let nextList = null;
 				if(cardId == targetList.idx) {
 					prevList = idx > 0 ? {
-						idx: arr[idx-1].firstElementChild.dataset.idx*1,
-						pos: arr[idx-1].firstElementChild.dataset.pos*1
+						idx: arr[idx-1].dataset.idx*1,
+						pos: arr[idx-1].dataset.pos*1
 					} : null;
 					nextList = idx < arr.length-1 ? {
-						idx: arr[idx+1].firstElementChild.dataset.idx*1,
-						pos: arr[idx+1].firstElementChild.dataset.pos*1
+						idx: arr[idx+1].dataset.idx*1,
+						pos: arr[idx+1].dataset.pos*1
 					} : null;
 
 					// if(!prevList && nextList) targetList.pos = nextList.pos / 2; // 첫 번째 자리
 					// else if(!nextList && prevList) targetList.pos = prevList.pos * 2; //마지막 자리
 					// else targetList.pos = (nextList.pos + prevList.pos) / 2; //중간 자리
-
-					console.log('prevList : ', prevList);
-					console.log('nextList : ', nextList);
 
 					if(!prevList && nextList) {
 						targetList.pos = nextList.pos / 2; // 첫 번째 자리
@@ -105,18 +104,30 @@ export default {
 						this.testNum = 3;
 					}
 
-					vm.$http({
-						method: 'PUT',
-						url: '/memo/update',
-						data: {
-							pos: targetList.pos,
-							idx: targetList.idx
-						}
-					}).then(async () => {
+					// vm.$http({
+					// 	method: 'PUT',
+					// 	url: '/memo/update',
+					// 	data: {
+					// 		pos: targetList.pos,
+					// 		id: targetList.idx
+					// 	}
+					// }).then(async () => {
+					// 	const {data} = await FETCH_MEMO('post', '/memo/fetch');
+					// 	this.rowData = data.rows;
+					// 	Bus.$emit('onStep', 1);
+					// }).catch(err => {
+					// 	console.log(err);
+					// })
+
+					this.UPDATE_MEMO_TITLE({pos: targetList.pos, id: targetList.idx})
+					.then(async () => {
 						const {data} = await FETCH_MEMO('post', '/memo/fetch');
 						this.rowData = data.rows;
 						Bus.$emit('onStep', 1);
+					}).catch(err => {
+						console.log(err);
 					})
+
 				}
 
 			})
@@ -124,6 +135,8 @@ export default {
 		// dragula([document.getElementById(container)]);
 	},
 	methods: {
+		...mapActions(['FETCH_MEMO']),
+		...mapActions(['UPDATE_MEMO_TITLE']),
 		async fetchList() {
 			try {
 				const {data} = await FETCH_MEMO('post', '/memo/fetch');
