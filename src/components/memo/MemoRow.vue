@@ -1,16 +1,18 @@
 <template>
 	<div class="memo_list_wrap">
 		<div class="memo_section">
-			<h3>Doing</h3>
+			<h3>메모</h3>
 			{{memoPosts}}
 			<ul id="memoList" class="memo_list">
 				<li class="list_item" v-for="memo in memos" v-bind:key="memo.idx" :data-idx="memo.idx" :data-pos="memo.pos">
 					<router-link :to="`/memo/detail/${memo.idx}`">
 						<div>
 							<input type="text" :value="memo.subject" readonly>
-							<button type="button" class="memo_delete" @click="deleteList(memo.idx)">&times;</button>
 						</div>
-					</router-link>										
+						<div v-if="memo.content" class="ico_more"><span></span><span></span><span></span></div>
+					</router-link>			
+					<button type="button" class="memo_delete" @click="deleteList(memo.idx)">&times;</button>
+
 				</li>
 				<li class="add_list">
 					<a href="" v-on:click.prevent="$emit('dhow')">+ Add list</a>
@@ -29,7 +31,6 @@ import dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 import Dim from '@/components/common/Dim.vue'
 import Bus from '@/utils/bus.js'
-import {FETCH_MEMO, DELETE_MEMO} from '@/api/memo.js';
 import {mapState, mapActions} from 'vuex';
 
 export default {
@@ -53,21 +54,20 @@ export default {
 		...mapState(['memo', 'memos'])
 	},
 	mounted() {
-		// const vm = this;
-
-		console.log('mounted');
 
 		this.dragulaCard = dragula([
-			// ...Array.from(this.$el.querySelectorAll('#memoList')) // 유사배열이라 Array.from처리해줌 (배열로 넣기위해)
-			document.getElementById('memoList')
-		]).on('drop', (el) => { // el, wrapper, target, siblings
+			// document.getElementById('memoList')
+			...Array.from(this.$el.querySelectorAll('#memoList')) // 유사배열이라 Array.from처리해줌 (배열로 넣기위해)
+		], {
+			invalid: (el) => {
+				return el.classList.contains('add_list'); //true가 반환되면 드래그를 할 수 없게 하는 함수이다. (getElementById로 element를 가져오면 안됨 => 배열로 가져와야되네...)
+      }
+		}).on('drop', (el) => { // el, wrapper, target, siblings
 
 			const targetList = {
 				idx: el.dataset.idx*1,
 				pos: el.dataset.pos*1
 			};
-
-			console.log(targetList.idx);
 
 
 			// 순서 비교는 배열의 index값으로 할꺼임
@@ -104,65 +104,24 @@ export default {
 						this.testNum = 3;
 					}
 
-					// vm.$http({
-					// 	method: 'PUT',
-					// 	url: '/memo/update',
-					// 	data: {
-					// 		pos: targetList.pos,
-					// 		id: targetList.idx
-					// 	}
-					// }).then(async () => {
-					// 	const {data} = await FETCH_MEMO('post', '/memo/fetch');
-					// 	this.rowData = data.rows;
-					// 	Bus.$emit('onStep', 1);
-					// }).catch(err => {
-					// 	console.log(err);
-					// })
-
-					this.UPDATE_MEMO_TITLE({pos: targetList.pos, id: targetList.idx})
-					.then(async () => {
-						const {data} = await FETCH_MEMO('post', '/memo/fetch');
-						this.rowData = data.rows;
-						Bus.$emit('onStep', 1);
-					}).catch(err => {
-						console.log(err);
-					})
+					this.UPDATE_MEMO({pos: targetList.pos, id: targetList.idx})
+					Bus.$emit('onStep', 1);
 
 				}
 
 			})
 		})
-		// dragula([document.getElementById(container)]);
 	},
 	methods: {
-		...mapActions(['FETCH_MEMO']),
-		...mapActions(['UPDATE_MEMO_TITLE']),
-		async fetchList() {
-			try {
-				const {data} = await FETCH_MEMO('post', '/memo/fetch');
-				this.rowData = data.rows;
-				this.isLoading = false;
-
-				console.log('[created] fetch memo : ',this.rowData);
-			}catch(err) {
-				console.log(err);
-			}
+		...mapActions(['FETCH_MEMO', 'UPDATE_MEMO', 'DELETE_MEMO']),
+		fetchList() {
+			this.FETCH_MEMO();
 		},
 		deleteList(id) {
-			console.log(id);
-
 			if(!window.confirm('해당 리스트를 삭제하시겠습니까?')) return;
 
-			try {
-				DELETE_MEMO('delete', `/memo/delete/${id}`).then(() => {
-					this.fetchList();
-					Bus.$emit('onStep', 3);
-
-				})
-
-			}catch(err) {
-				console.log('', err);
-			}
+			this.DELETE_MEMO({id});
+			Bus.$emit('onStep', 3);
 		}
 	}
 
@@ -177,7 +136,7 @@ export default {
 .memo_list > li input {border:0;outline:none;cursor:pointer}
 .memo_list .add_list {background-color:#a5c1de;}
 .memo_list .add_list a {display:block}
-.memo_list .memo_delete {position:absolute;right:5px;top:9px;width:24px;font-size:24px;line-height:1;background:none}
+.memo_list .memo_delete {position:absolute;right:5px;top:9px;width:24px;font-size:18px;line-height:1;background:none}
 .memo_list .icon {margin:5px 0 0}
 .memo_section {width:250px;margin-left:20px;padding:15px;border-radius:6px;background-color:#E5EFF5}
 .memo_section:first-child {margin-left:0}
@@ -191,4 +150,10 @@ export default {
 .gu-mirror .add_list a {display:block}
 .gu-mirror .memo_delete {position:absolute;right:5px;top:9px;width:24px;font-size:24px;line-height:1;background:none}
 .gu-mirror .icon {margin:5px 0 0}
+
+/* 내용있을 때 표시 아이콘 */
+.ico_more {line-height:17px;text-align:center;box-sizing:border-box;margin:5px 0 0}
+.ico_more span {display:block;width:11px;height:2px;margin-top:2px;background-color:#ccc}
+.ico_more span:first-child {margin:0}
+.ico_more span:nth-child(2) {width:14px}
 </style>

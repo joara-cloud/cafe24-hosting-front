@@ -10,6 +10,10 @@
 				<li>1. 메모 목록을 드래그하여 옮겨주세요. (하얀색 박스)</li>
 				<li>2. "Add list" 버튼을 눌려 메모를 추가해주세요.</li>
 				<li>3. X버튼을 눌러 메모를 삭제해주세요.</li>
+				<li>
+					<h5>메모 기능</h5>
+					<p>추가 / 삭제 / 수정(제목, 내용) / 이동</p>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -54,6 +58,8 @@ export default {
 .memo_info {padding:80px 50px;animation: ani 1s}
 .memo_info .info_list {padding:22px;border-radius:20px;background:#ccc;}
 .memo_info .info_list > li {font-size:14px;line-height:1.5;color:#555}
+.memo_info .info_list > li h5 {margin:10px 0 0}
+.memo_info .info_list > li p {font-weight:600}
 .memo_info .info_list > li.on {font-weight:600;color:#172852}
 @keyframes ani{
 	0%{transform: rotate(1deg);}

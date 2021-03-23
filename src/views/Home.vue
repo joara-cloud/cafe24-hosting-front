@@ -1,6 +1,6 @@
 <template>
   <div id="content">
-    main2
+    main2222
     <!-- <div id="main">
       <section class="section01">
         <div class="sentence_wrap">

@@ -15,11 +15,15 @@
 </template>
 
 <script>
-import {CREATE_MEMO} from '@/api/memo.js';
+// import {CREATE_MEMO} from '@/api/memo.js';
 import CardPopup from '@/components/memo/CardPopup.vue';
 import Bus from '@/utils/bus.js'
+import {mapState, mapActions} from 'vuex'
 
 export default {
+	computed: {
+		...mapState(['memos'])
+	},
 	components: {
 		CardPopup
 	},
@@ -31,21 +35,16 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions(['CREATE_MEMO']),
 		submitMemoList() {
-			// API (insert)
-			const data = {
-				subject: this.subject,
-				content: this.content,
-				pos: 65335
-			}
-			CREATE_MEMO('post', '/memo/create', data).then(function(response) {
+
+			const pos = this.memos[this.memos.length-1].pos * 2;
+			this.CREATE_MEMO({subject: this.subject, content: this.content, pos}).then(function(response) {
 				console.log('성공!', response);
 				Bus.$emit('onFetch');
 				Bus.$emit('onStep', 2);
 			})
-			.catch(function(err) {
-				console.log('메모 추가 중 에러 : ', err);
-			})
+
 		}
 	}
 
