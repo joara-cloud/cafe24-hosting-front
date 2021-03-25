@@ -2,14 +2,14 @@
 	<form action="" class="form_ty01" @submit.prevent="submitForm">
 		<div class="row">
 			<label for="">제목</label>
-			<input type="text" v-model="subject">
+			<input type="text" v-model="subject" ref="subjectInput">
 		</div>
 		<div class="row">
 			<label for="">내용</label>
-			<textarea name="" id="" cols="30" rows="10" v-model="content"></textarea>
+			<textarea name="" id="" cols="30" rows="10" v-model="content" ref="contentInput"></textarea>
 		</div>
 		<div class="row">
-			<label for="">파일첨부</label>
+			<label for="">파일첨부(선택)</label>
 			<input type="file" @change="uploadFile" ref="uploadImageFile">
 		</div>
 		<img :src="image" alt="">
@@ -32,6 +32,20 @@ export default {
 	methods: {
 		async submitForm() {
 			console.log('submitform 요청함');
+
+			if(!this.subject) {
+				// bus.$emit('show:toast', '제목을 입력해주세요.');
+				alert('제목을 입력해주세요.');
+				this.$refs.subjectInput.focus();
+				return;
+			}
+			if(!this.content) {
+				// bus.$emit('show:toast', '내용을 입력해주세요.');
+				alert('내용을 입력해주세요.');
+				this.$refs.contentInput.focus();
+				return;
+			}
+
 			try {
 
 				// upload file

@@ -23,6 +23,10 @@ var routes = [
       {
         path: 'write',
         component: () => import('@/views/board/Write.vue')
+      },
+      {
+        path: 'update/:id',
+        component: () => import('@/views/board/Update.vue')
       }
     ]
   },

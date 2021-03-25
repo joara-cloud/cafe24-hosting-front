@@ -73,7 +73,6 @@ export default {
 	async created() {		
 		this.fetchData();
 
-
 		this.currentPage *= 1;
 		this.nextNum = this.currentPage + 1 < this.pagination ? this.currentPage + 1 : this.pagination;
 		this.prevPage = this.currentPage - 1 < 1 ? 1 : this.currentPage-1;
