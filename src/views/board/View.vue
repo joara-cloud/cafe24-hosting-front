@@ -4,7 +4,7 @@
 		<view-content :postIndex="postIndex"></view-content>
 		<div class="text-center btns">
 			<router-link to="/posts/list?listNum=8&page=1" class="btn_ty01">목록으로</router-link>
-			<router-link :to="`/posts/update/${postIndex}`" class="btn_ty01 white right">수정</router-link>
+			<!-- <router-link :to="`/posts/update/${postIndex}`" class="btn_ty01 white right">수정</router-link> -->
 		</div>
 	</div>
 </template>
